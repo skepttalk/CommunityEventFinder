@@ -1,8 +1,16 @@
 import Express from "express";
-import { createEvent, joinEvent } from "../controllers/event.controller";
+import {
+  createEvent,
+  joinEvent,
+  getEvent,
+  getPopularEvents
+} from "../controllers/event.controller";
 
 const eventRouter = Express.Router();
 
 eventRouter.post("/createEvent", createEvent);
-eventRouter.post("/joinEvent", joinEvent);
+eventRouter.post("/join", joinEvent);
+eventRouter.get("/events", getEvent);
+eventRouter.get("/events/popular", getPopularEvents);
+
 export default eventRouter;
