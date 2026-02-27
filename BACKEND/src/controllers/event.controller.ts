@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import Event from "../models/event.model";
+import User from "../models/user.model";
+import { fetchPopularEvents } from "../services/event.service";
 import { asyncHandler } from "../utils/asyncHandler";
 import { successResponse } from "../utils/response";
 import { BadRequest, NotFound } from "../ERRORHANDLER/commanErrorHandler";
@@ -121,18 +123,10 @@ export const getEvent = asyncHandler(
 );
 
 
+
 export const getPopularEvents = asyncHandler(
   async (req: Request, res: Response) => {
-    const events = await Event.aggregate([
-      { $match: { status: "open" } },
-      {
-        $addFields: {
-          participantsCount: { $size: "$participants" },
-        },
-      },
-      { $sort: { participantsCount: -1 } },
-      { $limit: 10 },
-    ]);
+    const events = await fetchPopularEvents(10);
 
     return successResponse(res, "Popular events fetched", {
       count: events.length,
