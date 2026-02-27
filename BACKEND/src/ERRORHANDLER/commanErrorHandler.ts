@@ -52,6 +52,8 @@ export class Conflict extends ClientError {
 }
 
 
+
+
 export class ServerError extends HttpError {
   constructor(message: string, statusCode: number) {
     super(message, statusCode);
@@ -63,3 +65,4 @@ export class InternalServerError extends ServerError {
     super(message, 500);
   }
 }
+

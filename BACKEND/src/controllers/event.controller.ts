@@ -134,3 +134,52 @@ export const getPopularEvents = asyncHandler(
     });
   }
 );
+
+
+export const updateEvent = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { eventId } = req.params;
+    const updateData: any = { ...req.body };
+
+    if (updateData.latitude && updateData.longitude) {
+      updateData.location = {
+        type: "Point",
+        coordinates: [updateData.longitude, updateData.latitude],
+        address: updateData.address,
+        city: updateData.city,
+        state: updateData.state,
+      };
+      delete updateData.latitude;
+      delete updateData.longitude;
+    }
+
+    const updated = await Event.findByIdAndUpdate(eventId, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updated) {
+      throw new NotFound("Event not found");
+    }
+
+    return successResponse(res, "Event updated successfully", updated);
+  }
+);
+
+
+
+export const deleteEvent = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { eventId } = req.params;
+
+    const deleted = await Event.findByIdAndDelete(eventId);
+    if (!deleted) {
+      throw new NotFound("Event not found");
+    }
+
+    return successResponse(res, "Event deleted successfully");
+  }
+);
+
+
+
