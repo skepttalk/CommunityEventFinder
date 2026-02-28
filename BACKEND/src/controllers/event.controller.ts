@@ -7,7 +7,7 @@ import {
   Forbidden,
   BadRequest,
   Unauthorized,
-} from "../ERRORHANDLER/commanErrorHandler";
+} from "../ERRORHANDLER/httpError";
 import { fetchPopularEvents } from "../services/event.service";
 export const createEvent = asyncHandler(async (req: Request, res: Response) => {
   if (!req.user) {

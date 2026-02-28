@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Forbidden } from "../ERRORHANDLER/commanErrorHandler";
+import { Forbidden } from "../ERRORHANDLER/httpError";
 
 export const authorize = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {

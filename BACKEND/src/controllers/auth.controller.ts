@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 import { asyncHandler } from "../utils/asyncHandler";
 import { successResponse } from "../utils/response";
-import { BadRequest } from "../ERRORHANDLER/commanErrorHandler";
+import { BadRequest } from "../ERRORHANDLER/httpError";
 import { env } from "../config/env";
 
 const generateToken = (id: string) => {
