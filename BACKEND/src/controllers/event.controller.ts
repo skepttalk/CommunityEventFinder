@@ -17,10 +17,11 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
     throw new Unauthorized("Not authorized");
   }
 
-  const event = await createEventService(
-    req.body,
-    req.user._id.toString()
-  );
+  if (!req.user.isVerified) {
+    throw new BadRequest("Please verify your email first");
+  }
+
+  const event = await createEventService(req.body, req.user._id.toString());
 
   return successResponse(res, "Event created successfully", event, 201);
 });
@@ -30,10 +31,12 @@ export const joinEvent = asyncHandler(async (req: Request, res: Response) => {
     throw new Unauthorized("Not authorized");
   }
 
+  if (!req.user.isVerified) {
+    throw new BadRequest("Please verify your email first");
+  }
+
   const eventId =
-    typeof req.params.eventId === "string"
-      ? req.params.eventId
-      : undefined;
+    typeof req.params.eventId === "string" ? req.params.eventId : undefined;
 
   if (!eventId) {
     throw new BadRequest("Invalid event id");
@@ -45,29 +48,30 @@ export const joinEvent = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getEvent = asyncHandler(async (req: Request, res: Response) => {
-  const city =
-    typeof req.query.city === "string" ? req.query.city : undefined;
+  const city = typeof req.query.city === "string" ? req.query.city : undefined;
+  const type = typeof req.query.type === "string" ? req.query.type : undefined;
+  const sort = typeof req.query.sort === "string" ? req.query.sort : undefined;
+  const search = typeof req.query.search === "string" ? req.query.search : undefined;
 
-  const type =
-    typeof req.query.type === "string" ? req.query.type : undefined;
+  const page = req.query.page ? Number(req.query.page) : 1;
+  const limit = req.query.limit ? Number(req.query.limit) : 6;
 
-  const sort =
-    typeof req.query.sort === "string" ? req.query.sort : undefined;
-
-  const events = await getEventsService(city, type, sort);
-
-  return successResponse(res, "Events fetched successfully", {
-    count: events.length,
-    events,
+  const result = await getEventsService({
+    city,
+    type,
+    sort,
+    search,
+    page,
+    limit,
   });
+
+  return successResponse(res, "Events fetched successfully", result);
 });
 
 export const getPopularEvents = asyncHandler(
   async (req: Request, res: Response) => {
     const limit =
-      typeof req.query.limit === "string"
-        ? Number(req.query.limit)
-        : 10;
+      typeof req.query.limit === "string" ? Number(req.query.limit) : 10;
 
     const events = await fetchPopularEvents(limit);
 
@@ -75,7 +79,7 @@ export const getPopularEvents = asyncHandler(
       count: events.length,
       events,
     });
-  }
+  },
 );
 
 export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
@@ -84,9 +88,7 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const eventId =
-    typeof req.params.eventId === "string"
-      ? req.params.eventId
-      : undefined;
+    typeof req.params.eventId === "string" ? req.params.eventId : undefined;
 
   if (!eventId) {
     throw new BadRequest("Invalid event id");
@@ -95,7 +97,7 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
   const event = await updateEventService(
     eventId,
     req.user._id.toString(),
-    req.body
+    req.body,
   );
 
   return successResponse(res, "Event updated successfully", event);
@@ -107,18 +109,13 @@ export const closeEvent = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const eventId =
-    typeof req.params.eventId === "string"
-      ? req.params.eventId
-      : undefined;
+    typeof req.params.eventId === "string" ? req.params.eventId : undefined;
 
   if (!eventId) {
     throw new BadRequest("Invalid event id");
   }
 
-  const event = await closeEventService(
-    eventId,
-    req.user._id.toString()
-  );
+  const event = await closeEventService(eventId, req.user._id.toString());
 
   return successResponse(res, "Event closed successfully", event);
 });
@@ -129,18 +126,13 @@ export const deleteEvent = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const eventId =
-    typeof req.params.eventId === "string"
-      ? req.params.eventId
-      : undefined;
+    typeof req.params.eventId === "string" ? req.params.eventId : undefined;
 
   if (!eventId) {
     throw new BadRequest("Invalid event id");
   }
 
-  await deleteEventService(
-    eventId,
-    req.user._id.toString()
-  );
+  await deleteEventService(eventId, req.user._id.toString());
 
   return successResponse(res, "Event deleted successfully");
 });
