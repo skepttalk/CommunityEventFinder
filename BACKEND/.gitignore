@@ -17,3 +17,7 @@ npm-debug.log*
 
 # TypeScript cache
 *.tsbuildinfo
+
+
+# Package-lock-json
+package-lock-json
