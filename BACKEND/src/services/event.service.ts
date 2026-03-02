@@ -23,7 +23,7 @@ export const joinEventService = async (eventId: string, userId: string) => {
   const userObjectId = new mongoose.Types.ObjectId(userId);
 
   const alreadyJoined = event.participants.some(
-    (participant) => participant.toString() === userObjectId.toString()
+    (participant) => participant.toString() === userObjectId.toString(),
   );
 
   if (alreadyJoined) {
@@ -39,7 +39,7 @@ export const joinEventService = async (eventId: string, userId: string) => {
 export const updateEventService = async (
   eventId: string,
   userId: string,
-  body: any
+  body: any,
 ) => {
   const event = await Event.findById(eventId);
 
@@ -130,7 +130,7 @@ export const getEventsService = async ({
 
   await Event.updateMany(
     { date: { $lt: today }, status: "open" },
-    { $set: { status: "closed" } }
+    { $set: { status: "closed" } },
   );
 
   const skip = (page - 1) * limit;
@@ -172,4 +172,21 @@ export const fetchPopularEvents = async (limit = 10) => {
     { $sort: { participantsCount: -1 } },
     { $limit: limit },
   ]);
+};
+
+export const getCalendarEventsService = async (month: number, year: number) => {
+  if (!month || !year) {
+    throw new BadRequest("Month and year are required");
+  }
+
+  const start = new Date(year, month - 1, 1);
+  const end = new Date(year, month, 0, 23, 59, 59);
+
+  const events = await Event.find({
+    date: { $gte: start, $lte: end },
+  })
+    .select("title date location status")
+    .sort({ date: 1 });
+
+  return events;
 };

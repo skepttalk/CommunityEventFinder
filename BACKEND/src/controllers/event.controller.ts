@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { successResponse } from "../utils/response";
 import { Unauthorized, BadRequest } from "../ERRORHANDLER/httpError";
+import { getCalendarEventsService } from "../services/event.service";
 import {
   createEventService,
   joinEventService,
@@ -51,7 +52,8 @@ export const getEvent = asyncHandler(async (req: Request, res: Response) => {
   const city = typeof req.query.city === "string" ? req.query.city : undefined;
   const type = typeof req.query.type === "string" ? req.query.type : undefined;
   const sort = typeof req.query.sort === "string" ? req.query.sort : undefined;
-  const search = typeof req.query.search === "string" ? req.query.search : undefined;
+  const search =
+    typeof req.query.search === "string" ? req.query.search : undefined;
 
   const page = req.query.page ? Number(req.query.page) : 1;
   const limit = req.query.limit ? Number(req.query.limit) : 6;
@@ -136,3 +138,24 @@ export const deleteEvent = asyncHandler(async (req: Request, res: Response) => {
 
   return successResponse(res, "Event deleted successfully");
 });
+
+export const getCalendarEvents = asyncHandler(
+  async (req: Request, res: Response) => {
+    const month =
+      typeof req.query.month === "string" ? Number(req.query.month) : undefined;
+
+    const year =
+      typeof req.query.year === "string" ? Number(req.query.year) : undefined;
+
+    if (!month || !year) {
+      throw new BadRequest("Month and year are required");
+    }
+
+    const events = await getCalendarEventsService(month, year);
+
+    return successResponse(res, "Calendar events fetched", {
+      count: events.length,
+      events,
+    });
+  },
+);
