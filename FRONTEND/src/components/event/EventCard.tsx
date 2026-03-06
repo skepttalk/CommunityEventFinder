@@ -1,5 +1,6 @@
 import { CalendarDays, MapPin, Users, ArrowRight } from "lucide-react"
 import { Link } from "react-router-dom"
+import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Event } from "@/types/event.types"
@@ -22,8 +23,14 @@ export default function EventCard({ event }: Props) {
   })
 
   return (
-    <Card className="flex flex-col transition hover:shadow-md">
-      <CardContent className="p-5 flex flex-col h-full">
+    <motion.div
+      initial={{ scale: 0.98, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300 }}
+    >
+      <Card className="flex flex-col transition hover:shadow-md">
+        <CardContent className="p-5 flex flex-col h-full">
         <div className="flex justify-between">
           <Badge
             variant={event.status === "closed" ? "error" : "success"}
@@ -81,5 +88,6 @@ export default function EventCard({ event }: Props) {
         </Link>
       </CardContent>
     </Card>
+    </motion.div>
   )
 }

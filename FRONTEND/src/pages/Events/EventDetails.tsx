@@ -1,10 +1,11 @@
 import { useParams, Link } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { CalendarDays, MapPin, Users } from "lucide-react"
+import { motion } from "framer-motion"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import JoinButton from "@/components/event/JoinButton"
 
 import { getEventById } from "@/services/event.service"
 
@@ -18,12 +19,20 @@ export default function EventDetails() {
 
   if (isLoading) return <div className="p-6 text-center">Loading...</div>
 
+  if (!event) return <div className="p-6 text-center">Event not found</div>
+
   const participants = event?.participants?.length || 0
   const max = event?.maxParticipants || 50
   const spotsLeft = max - participants
+  const percent = Math.min((participants / max) * 100, 100)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <motion.div
+      className="max-w-7xl mx-auto px-4 py-8"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
 
       <Link
         to="/events"
@@ -40,7 +49,10 @@ export default function EventDetails() {
           <Card>
             <CardContent className="p-6">
 
-              <Badge className="mb-2">
+              <Badge
+                variant={event.status === "open" ? "default" : "secondary"}
+                className="mb-3 capitalize"
+              >
                 {event.status}
               </Badge>
 
@@ -56,14 +68,13 @@ export default function EventDetails() {
                 About This Event
               </h3>
 
-              <p className="text-muted-foreground mt-2">
+              <p className="text-muted-foreground mt-2 leading-relaxed">
                 {event.description}
               </p>
 
             </CardContent>
           </Card>
 
-      
 
           <Card>
             <CardContent className="p-6">
@@ -75,11 +86,11 @@ export default function EventDetails() {
               <iframe
                 title="map"
                 className="w-full h-64 rounded-md"
-                src={`https://maps.google.com/maps?q=${event.location?.city}&z=15&output=embed`}
+                src={`https://maps.google.com/maps?q=${event.location?.street},${event.location?.city}&z=15&output=embed`}
               />
 
               <p className="text-sm text-muted-foreground mt-2">
-                {event.location?.address}, {event.location?.city}
+                {event.location?.street}, {event.location?.city}
               </p>
 
             </CardContent>
@@ -96,7 +107,12 @@ export default function EventDetails() {
 
               <div className="flex items-center gap-2 text-sm">
                 <CalendarDays size={16} />
-                {new Date(event.date).toLocaleString()}
+                {new Date(event.date).toLocaleDateString(undefined, {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </div>
 
               <div className="flex items-center gap-2 text-sm">
@@ -113,9 +129,14 @@ export default function EventDetails() {
                 {spotsLeft} spots remaining
               </div>
 
-              <Button className="w-full">
-                RSVP Now
-              </Button>
+              <div className="w-full bg-muted h-2 rounded-md overflow-hidden">
+                <div
+                  className="bg-primary h-full"
+                  style={{ width: `${percent}%` }}
+                />
+              </div>
+
+              <JoinButton eventId={event._id} />
 
             </CardContent>
           </Card>
@@ -123,6 +144,7 @@ export default function EventDetails() {
         </div>
 
       </div>
-    </div>
+
+    </motion.div>
   )
 }

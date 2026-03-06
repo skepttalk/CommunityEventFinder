@@ -1,12 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
-import { getPopularEvents, getEvents } from "@/services/event.service"
+import { getEvents } from "@/services/event.service"
 import { motion } from "framer-motion"
 
 export default function StatsSection() {
-  const { data: popularEvents } = useQuery({
-    queryKey: ["popularEvents"],
-    queryFn: () => getPopularEvents(10),
-  })
 
   const { data: allEvents } = useQuery({
     queryKey: ["allEvents"],
@@ -17,6 +13,21 @@ export default function StatsSection() {
       }),
   })
 
+
+  const citiesCount =
+    new Set(
+      allEvents?.events
+        ?.map((e: any) => e.location?.city)
+        .filter(Boolean)
+    ).size || 0
+
+  const participantsCount =
+    allEvents?.events?.reduce((sum: number, event: any) => {
+      const participants =
+        event.participants?.length || 0
+      return sum + participants
+    }, 0) || 0
+
   const stats = [
     {
       label: "Total Events",
@@ -24,18 +35,11 @@ export default function StatsSection() {
     },
     {
       label: "Participants",
-      value:
-        popularEvents?.events?.reduce((sum: number, event: any) => {
-          const participantsCount =
-            event.participantsCount ||
-            event.participants?.length ||
-            0
-          return sum + participantsCount
-        }, 0) || 0,
+      value: participantsCount,
     },
     {
-      label: "Popular Events",
-      value: popularEvents?.events?.length || 0,
+      label: "Cities",
+      value: citiesCount,
     },
   ]
 
