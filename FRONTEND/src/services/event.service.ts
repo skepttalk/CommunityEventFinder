@@ -11,3 +11,10 @@ export const getPopularEvents = async (limit: number = 10) => {
   const response = await axios.get(`${API}/events/popular`, { params: { limit } })
   return response.data.data
 }
+
+
+
+export const getEventById = async (id: string) => {
+  const response = await axios.get(`${API}/events/${id}`)
+  return response.data.data
+}

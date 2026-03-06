@@ -40,6 +40,20 @@ export const joinEventService = async (eventId: string, userId: string) => {
   return event;
 };
 
+
+
+export const getEventByIdService = async (eventId: string) => {
+  const event = await Event.findById(eventId)
+    .populate("createdBy", "name email role")
+    .populate("participants", "name email")
+
+  if (!event) {
+    throw new NotFound("Event not found")
+  }
+
+  return event
+}
+
 export const updateEventService = async (
   eventId: string,
   userId: string,
@@ -165,6 +179,8 @@ export const getEventsService = async ({
   };
 };
 
+
+
 export const fetchPopularEvents = async (limit = 10) => {
   return Event.aggregate([
     { $match: { status: "open" } },
@@ -194,3 +210,4 @@ export const getCalendarEventsService = async (month: number, year: number) => {
 
   return events;
 };
+

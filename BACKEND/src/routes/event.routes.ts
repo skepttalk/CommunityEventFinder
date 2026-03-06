@@ -8,6 +8,7 @@ import {
   deleteEvent,
   closeEvent,
   getCalendarEvents,
+  getSingleEvent,
 } from "../controllers/event.controller";
 import { validate } from "../middleware/validate.middleware";
 import { createEventSchema } from "../dto/event.dto";
@@ -17,6 +18,7 @@ const router = express.Router();
 
 router.post("/", protect, validate(createEventSchema), createEvent);
 router.get("/", getEvent);
+router.get("/:eventId", getSingleEvent)
 router.get("/popular", getPopularEvents);
 router.get("/calendar", getCalendarEvents);
 router.post("/:eventId/join", protect, joinEvent);

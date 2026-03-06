@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { successResponse } from "../utils/response";
 import { Unauthorized, BadRequest } from "../ERRORHANDLER/httpError";
-import { getCalendarEventsService } from "../services/event.service";
+import { getCalendarEventsService, getEventByIdService } from "../services/event.service";
 import {
   createEventService,
   joinEventService,
@@ -26,6 +26,22 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
 
   return successResponse(res, "Event created successfully", event, 201);
 });
+
+
+export const getSingleEvent = asyncHandler(
+  async (req: Request, res: Response) => {
+    const eventId =
+      typeof req.params.eventId === "string" ? req.params.eventId : undefined
+
+    if (!eventId) {
+      throw new BadRequest("Invalid event id")
+    }
+
+    const event = await getEventByIdService(eventId)
+
+    return successResponse(res, "Event fetched successfully", event)
+  }
+)
 
 export const joinEvent = asyncHandler(async (req: Request, res: Response) => {
   if (!req.user) {
