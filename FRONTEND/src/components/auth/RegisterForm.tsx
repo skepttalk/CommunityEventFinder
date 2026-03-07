@@ -8,7 +8,7 @@ import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
 import { registerUser } from "@/services/auth.service"
 
-export default function RegisterForm({ setEmail, showOTP }: any) {
+export default function RegisterForm({ setEmail, setShowOTP }: any) {
 
   const [showPassword, setShowPassword] = useState(false)
 
@@ -22,7 +22,10 @@ export default function RegisterForm({ setEmail, showOTP }: any) {
     onSuccess: () => {
       localStorage.setItem("verifyEmail", email)
       setEmail(email)
-      showOTP(true)
+      setShowOTP(true)
+    },
+    onError: (err:any) => {
+      alert(err?.response?.data?.message || "Registration failed")
     }
   })
 

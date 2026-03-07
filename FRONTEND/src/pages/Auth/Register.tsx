@@ -21,7 +21,7 @@ export default function Register() {
           className="grid grid-cols-1 lg:grid-cols-2 gap-10"
         >
 
-          <RegisterForm setEmail={setEmail} showOTP={setShowOTP} />
+          <RegisterForm setEmail={setEmail} setShowOTP={setShowOTP} />
 
           <div className="space-y-6">
 

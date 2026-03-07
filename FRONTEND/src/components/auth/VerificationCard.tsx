@@ -18,6 +18,9 @@ export default function VerificationCard({ email }: any) {
     mutationFn: verifyOTP,
     onSuccess: () => {
       navigate("/login")
+    },
+    onError:(err:any)=>{
+      alert(err?.response?.data?.message || "Invalid OTP")
     }
   })
 
