@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 export default function Logo() {
   return (
@@ -31,5 +31,5 @@ export default function Logo() {
         Event<span className="text-blue-600">Finder</span>
       </span>
     </Link>
-  )
+  );
 }

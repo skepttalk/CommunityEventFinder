@@ -1,6 +1,6 @@
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui"
-import { CalendarDays, MapPin, Users } from "lucide-react"
-import { motion } from "framer-motion"
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui";
+import { CalendarDays, MapPin, Users } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function FeaturesSection() {
   const features = [
@@ -22,7 +22,7 @@ export default function FeaturesSection() {
       description:
         "Join events with a single click. Track your registrations and get updates as event details change.",
     },
-  ]
+  ];
 
   return (
     <section className="bg-background py-20 lg:py-28">
@@ -32,13 +32,14 @@ export default function FeaturesSection() {
             Everything You Need to Stay Connected
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Whether you are looking to attend or organize, EventFinder has the tools to make it happen.
+            Whether you are looking to attend or organize, EventFinder has the
+            tools to make it happen.
           </p>
         </div>
 
         <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
           {features.map((feature) => {
-            const Icon = feature.icon
+            const Icon = feature.icon;
             return (
               <motion.div
                 key={feature.title}
@@ -59,10 +60,10 @@ export default function FeaturesSection() {
                   </CardHeader>
                 </Card>
               </motion.div>
-            )
+            );
           })}
         </div>
       </div>
     </section>
-  )
+  );
 }

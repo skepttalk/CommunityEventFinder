@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui"
-import { ArrowRight, CalendarDays } from "lucide-react"
-import { Link } from "react-router-dom"
-import { motion } from "framer-motion"
+import { Button } from "@/components/ui";
+import { ArrowRight, CalendarDays } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function HeroSection() {
   return (
@@ -47,5 +47,5 @@ export default function HeroSection() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

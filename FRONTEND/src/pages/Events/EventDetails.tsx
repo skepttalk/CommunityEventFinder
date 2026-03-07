@@ -1,30 +1,70 @@
-import { useParams, Link } from "react-router-dom"
-import { useQuery } from "@tanstack/react-query"
-import { CalendarDays, MapPin, Users } from "lucide-react"
-import { motion } from "framer-motion"
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { joinEvent, getEventById } from "@/services/event.service";
+import { useParams, Link } from "react-router-dom";
+import { CalendarDays, MapPin, Users } from "lucide-react";
+import { motion } from "framer-motion";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import JoinButton from "@/components/event/JoinButton"
-
-import { getEventById } from "@/services/event.service"
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export default function EventDetails() {
-  const { id } = useParams()
+  const { id } = useParams();
 
-  const { data: event, isLoading } = useQuery({
+  const {
+    data: event,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["event", id],
     queryFn: () => getEventById(id as string),
-  })
+  });
 
-  if (isLoading) return <div className="p-6 text-center">Loading...</div>
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  if (!event) return <div className="p-6 text-center">Event not found</div>
+  const joinMutation = useMutation({
+    mutationFn: joinEvent,
+    onSuccess: () => {
+      alert("Join request sent");
+      refetch();
+    },
+    onError: (err: any) => {
+      alert(err?.response?.data?.message || "Unable to join event");
+    },
+  });
 
-  const participants = event?.participants?.length || 0
-  const max = event?.maxParticipants || 50
-  const spotsLeft = max - participants
-  const percent = Math.min((participants / max) * 100, 100)
+  if (isLoading) return <div className="p-6 text-center">Loading...</div>;
+
+  if (!event) return <div className="p-6 text-center">Event not found</div>;
+
+  const participants = event?.participants?.length || 0;
+  const max = event?.maxParticipants || 50;
+  const spotsLeft = max - participants;
+  const percent = Math.min((participants / max) * 100, 100);
+
+  const isClosed = event.status === "closed";
+  const isParticipant =
+    event.participants?.some((p: any) => p._id === user?._id) || false;
+
+  const isPending =
+    event.pendingParticipants?.some((p: any) => p._id === user?._id) || false;
+
+  const isOrganizer = event.createdBy?._id === user?._id;
+
+  const isFull = participants >= max;
+
+  const buttonText = isParticipant
+    ? "Already Joined"
+    : isPending
+      ? "Pending Approval"
+      : isClosed
+        ? "Event Closed"
+        : isFull
+          ? "Event Full"
+          : "Join Event";
+
+  const disabled =
+    isParticipant || isPending || isClosed || isOrganizer || isFull;
 
   return (
     <motion.div
@@ -33,7 +73,6 @@ export default function EventDetails() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-
       <Link
         to="/events"
         className="text-sm text-muted-foreground hover:underline"
@@ -42,13 +81,9 @@ export default function EventDetails() {
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
-
-
         <div className="lg:col-span-2 space-y-6">
-
           <Card>
             <CardContent className="p-6">
-
               <Badge
                 variant={event.status === "open" ? "default" : "secondary"}
                 className="mb-3 capitalize"
@@ -56,32 +91,23 @@ export default function EventDetails() {
                 {event.status}
               </Badge>
 
-              <h1 className="text-3xl font-bold">
-                {event.title}
-              </h1>
+              <h1 className="text-3xl font-bold">{event.title}</h1>
 
               <p className="text-muted-foreground mt-2">
                 Organized by {event.createdBy?.name || "Organizer"}
               </p>
 
-              <h3 className="mt-6 font-semibold text-lg">
-                About This Event
-              </h3>
+              <h3 className="mt-6 font-semibold text-lg">About This Event</h3>
 
               <p className="text-muted-foreground mt-2 leading-relaxed">
                 {event.description}
               </p>
-
             </CardContent>
           </Card>
 
-
           <Card>
             <CardContent className="p-6">
-
-              <h3 className="font-semibold text-lg mb-4">
-                Location
-              </h3>
+              <h3 className="font-semibold text-lg mb-4">Location</h3>
 
               <iframe
                 title="map"
@@ -92,19 +118,13 @@ export default function EventDetails() {
               <p className="text-sm text-muted-foreground mt-2">
                 {event.location?.street}, {event.location?.city}
               </p>
-
             </CardContent>
           </Card>
-
         </div>
 
-
-
         <div className="space-y-6">
-
           <Card>
             <CardContent className="p-6 space-y-4">
-
               <div className="flex items-center gap-2 text-sm">
                 <CalendarDays size={16} />
                 {new Date(event.date).toLocaleDateString(undefined, {
@@ -136,15 +156,17 @@ export default function EventDetails() {
                 />
               </div>
 
-              <JoinButton eventId={event._id} />
-
+              <Button
+                className="w-full"
+                disabled={disabled}
+                onClick={() => joinMutation.mutate(event._id)}
+              >
+                {joinMutation.isPending ? "Joining..." : buttonText}
+              </Button>
             </CardContent>
           </Card>
-
         </div>
-
       </div>
-
     </motion.div>
-  )
+  );
 }

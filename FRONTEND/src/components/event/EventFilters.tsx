@@ -1,22 +1,22 @@
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 interface EventFiltersProps {
-  search: string
-  city: string
-  type: string
-  sort: string
-  cities: string[]
-  onSearchChange: (value: string) => void
-  onCityChange: (value: string) => void
-  onTypeChange: (value: string) => void
-  onSortChange: (value: string) => void
+  search: string;
+  city: string;
+  type: string;
+  sort: string;
+  cities: string[];
+  onSearchChange: (value: string) => void;
+  onCityChange: (value: string) => void;
+  onTypeChange: (value: string) => void;
+  onSortChange: (value: string) => void;
 }
 
 export default function EventFilters({
@@ -30,6 +30,22 @@ export default function EventFilters({
   onTypeChange,
   onSortChange,
 }: EventFiltersProps) {
+  const handleCityChange = (value: string) => {
+    if (value === "all") {
+      onCityChange("");
+    } else {
+      onCityChange(value);
+    }
+  };
+
+  const handleTypeChange = (value: string) => {
+    if (value === "all") {
+      onTypeChange("");
+    } else {
+      onTypeChange(value);
+    }
+  };
+
   return (
     <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <Input
@@ -38,7 +54,7 @@ export default function EventFilters({
         onChange={(e) => onSearchChange(e.target.value)}
       />
 
-      <Select value={city} onValueChange={onCityChange}>
+      <Select value={city || "all"} onValueChange={handleCityChange}>
         <SelectTrigger>
           <SelectValue placeholder="City" />
         </SelectTrigger>
@@ -54,7 +70,7 @@ export default function EventFilters({
         </SelectContent>
       </Select>
 
-      <Select value={type} onValueChange={onTypeChange}>
+      <Select value={type || "all"} onValueChange={handleTypeChange}>
         <SelectTrigger>
           <SelectValue placeholder="Type" />
         </SelectTrigger>
@@ -78,5 +94,5 @@ export default function EventFilters({
         </SelectContent>
       </Select>
     </div>
-  )
+  );
 }

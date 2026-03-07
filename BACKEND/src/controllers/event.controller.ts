@@ -2,7 +2,12 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { successResponse } from "../utils/response";
 import { Unauthorized, BadRequest } from "../ERRORHANDLER/httpError";
-import { getCalendarEventsService, getEventByIdService } from "../services/event.service";
+import {
+  getCalendarEventsService,
+  getEventByIdService,
+  getMyEventsService,
+  approveParticipantService,
+} from "../services/event.service";
 import {
   createEventService,
   joinEventService,
@@ -27,21 +32,20 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
   return successResponse(res, "Event created successfully", event, 201);
 });
 
-
 export const getSingleEvent = asyncHandler(
   async (req: Request, res: Response) => {
     const eventId =
-      typeof req.params.eventId === "string" ? req.params.eventId : undefined
+      typeof req.params.eventId === "string" ? req.params.eventId : undefined;
 
     if (!eventId) {
-      throw new BadRequest("Invalid event id")
+      throw new BadRequest("Invalid event id");
     }
 
-    const event = await getEventByIdService(eventId)
+    const event = await getEventByIdService(eventId);
 
-    return successResponse(res, "Event fetched successfully", event)
-  }
-)
+    return successResponse(res, "Event fetched successfully", event);
+  },
+);
 
 export const joinEvent = asyncHandler(async (req: Request, res: Response) => {
   if (!req.user) {
@@ -61,8 +65,34 @@ export const joinEvent = asyncHandler(async (req: Request, res: Response) => {
 
   await joinEventService(eventId, req.user._id.toString());
 
-  return successResponse(res, "Event joined successfully");
+  return successResponse(res, "Join request sent");
 });
+
+export const approveParticipant = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new Unauthorized("Not authorized");
+    }
+
+    const eventId =
+      typeof req.params.eventId === "string" ? req.params.eventId : undefined;
+
+    const userId =
+      typeof req.params.userId === "string" ? req.params.userId : undefined;
+
+    if (!eventId || !userId) {
+      throw new BadRequest("Invalid request");
+    }
+
+    const event = await approveParticipantService(
+      eventId,
+      req.user._id.toString(),
+      userId,
+    );
+
+    return successResponse(res, "Participant approved", event);
+  },
+);
 
 export const getEvent = asyncHandler(async (req: Request, res: Response) => {
   const city = typeof req.query.city === "string" ? req.query.city : undefined;
@@ -175,3 +205,13 @@ export const getCalendarEvents = asyncHandler(
     });
   },
 );
+
+export const getMyEvents = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.user) {
+    throw new Unauthorized("Not authorized");
+  }
+
+  const events = await getMyEventsService(req.user._id.toString());
+
+  return successResponse(res, "My events fetched", events);
+});

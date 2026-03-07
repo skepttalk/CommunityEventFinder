@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
-import { Link } from "react-router-dom"
-import { motion } from "framer-motion"
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function CTASection() {
   return (
@@ -22,8 +22,8 @@ export default function CTASection() {
             </h2>
 
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground leading-relaxed">
-              Sign up as an organizer and start creating events that bring people together.
-              It takes less than a minute.
+              Sign up as an organizer and start creating events that bring
+              people together. It takes less than a minute.
             </p>
 
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
@@ -44,5 +44,5 @@ export default function CTASection() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

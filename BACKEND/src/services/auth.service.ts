@@ -9,7 +9,7 @@ const generateToken = (id: string) => {
   return jwt.sign(
     { id },
     env.JWT_SECRET as jwt.Secret,
-    { expiresIn: env.JWT_EXPIRE } as jwt.SignOptions
+    { expiresIn: env.JWT_EXPIRE } as jwt.SignOptions,
   );
 };
 
@@ -17,7 +17,7 @@ export const registerUser = async (
   name: string,
   email: string,
   password: string,
-  role: string
+  role: string,
 ) => {
   email = email.toLowerCase();
 
@@ -30,7 +30,7 @@ export const registerUser = async (
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const verificationCode = Math.floor(
-    100000 + Math.random() * 900000
+    100000 + Math.random() * 900000,
   ).toString();
 
   const user = await User.create({
@@ -73,7 +73,10 @@ export const verifyEmailService = async (email: string, code: string) => {
     throw new BadRequest("Invalid verification code");
   }
 
-  if (!user.verificationCodeExpire || user.verificationCodeExpire < new Date()) {
+  if (
+    !user.verificationCodeExpire ||
+    user.verificationCodeExpire < new Date()
+  ) {
     throw new BadRequest("Verification code expired");
   }
 

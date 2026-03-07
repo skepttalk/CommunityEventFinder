@@ -1,17 +1,21 @@
-import { createBrowserRouter } from "react-router-dom"
+import { createBrowserRouter } from "react-router-dom";
 
-import Landing from "../pages/Landing"
-import Login from "../pages/Auth/Login"
-import Register from "../pages/Auth/Register"
+import Landing from "../pages/Landing";
+import Login from "../pages/Auth/Login";
+import Register from "../pages/Auth/Register";
 
-import EventList from "../pages/Events/EventList"
-import EventDetails from "../pages/Events/EventDetails"
+import EventList from "../pages/Events/EventList";
+import EventDetails from "../pages/Events/EventDetails";
+import CreateEvent from "../pages/Events/CreateEvent";
+import EditEvent from "../pages/Events/EditEvent";
 
-import Dashboard from "../pages/Dashboard/Dashboard"
-import CalendarView from "../pages/Calendar/CalendarView"
+import Dashboard from "../pages/Dashboard/Dashboard";
+import MyEvents from "../pages/Dashboard/MyEvents";
 
-import ProtectedRoute from "../components/layout/ProtectedRoute"
-import MainLayout from "../components/layout/MainLayout"
+import CalendarView from "../pages/Calendar/CalendarView";
+
+import ProtectedRoute from "../components/layout/ProtectedRoute";
+import MainLayout from "../components/layout/MainLayout";
 
 export const router = createBrowserRouter([
   {
@@ -36,10 +40,12 @@ export const router = createBrowserRouter([
         path: "/events",
         element: <EventList />,
       },
+
       {
         path: "/events/:id",
         element: <EventDetails />,
       },
+
       {
         path: "/calendar",
         element: (
@@ -48,11 +54,39 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+
       {
         path: "/dashboard",
         element: (
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/my-events",
+        element: (
+          <ProtectedRoute>
+            <MyEvents />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/create-event",
+        element: (
+          <ProtectedRoute>
+            <CreateEvent />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/edit-event/:id",
+        element: (
+          <ProtectedRoute>
+            <EditEvent />
           </ProtectedRoute>
         ),
       },
@@ -67,4 +101,4 @@ export const router = createBrowserRouter([
       </div>
     ),
   },
-])
+]);

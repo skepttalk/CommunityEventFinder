@@ -1,9 +1,8 @@
-import { useQuery } from "@tanstack/react-query"
-import { getEvents } from "@/services/event.service"
-import { motion } from "framer-motion"
+import { useQuery } from "@tanstack/react-query";
+import { getEvents } from "@/services/event.service";
+import { motion } from "framer-motion";
 
 export default function StatsSection() {
-
   const { data: allEvents } = useQuery({
     queryKey: ["allEvents"],
     queryFn: () =>
@@ -11,22 +10,18 @@ export default function StatsSection() {
         page: 1,
         limit: 100,
       }),
-  })
-
+  });
 
   const citiesCount =
     new Set(
-      allEvents?.events
-        ?.map((e: any) => e.location?.city)
-        .filter(Boolean)
-    ).size || 0
+      allEvents?.events?.map((e: any) => e.location?.city).filter(Boolean),
+    ).size || 0;
 
   const participantsCount =
     allEvents?.events?.reduce((sum: number, event: any) => {
-      const participants =
-        event.participants?.length || 0
-      return sum + participants
-    }, 0) || 0
+      const participants = event.participants?.length || 0;
+      return sum + participants;
+    }, 0) || 0;
 
   const stats = [
     {
@@ -41,7 +36,7 @@ export default function StatsSection() {
       label: "Cities",
       value: citiesCount,
     },
-  ]
+  ];
 
   return (
     <section className="bg-primary/5 py-20 lg:py-28">
@@ -76,5 +71,5 @@ export default function StatsSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
