@@ -10,6 +10,7 @@ import {
   deleteEvent,
   getEventById,
   approveParticipant,
+  rejectParticipant,
 } from "@/services/event.service";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -79,9 +80,13 @@ export default function EditEvent() {
   const approveMutation = useMutation({
     mutationFn: ({ eventId, userId }: any) =>
       approveParticipant(eventId, userId),
-    onSuccess: () => {
-      refetch();
-    },
+    onSuccess: () => refetch(),
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: ({ eventId, userId }: any) =>
+      rejectParticipant(eventId, userId),
+    onSuccess: () => refetch(),
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -135,6 +140,7 @@ export default function EditEvent() {
         <CardContent className="p-8 space-y-6">
           <div>
             <h1 className="text-2xl font-bold">Edit Event</h1>
+
             <p className="text-muted-foreground">Update your event details</p>
           </div>
 
@@ -273,16 +279,30 @@ export default function EditEvent() {
                   <p className="text-sm text-muted-foreground">{user.email}</p>
                 </div>
 
-                <Button
-                  onClick={() =>
-                    approveMutation.mutate({
-                      eventId: event._id,
-                      userId: user._id,
-                    })
-                  }
-                >
-                  Approve
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() =>
+                      approveMutation.mutate({
+                        eventId: event._id,
+                        userId: user._id,
+                      })
+                    }
+                  >
+                    Approve
+                  </Button>
+
+                  <Button
+                    variant="destructive"
+                    onClick={() =>
+                      rejectMutation.mutate({
+                        eventId: event._id,
+                        userId: user._id,
+                      })
+                    }
+                  >
+                    Reject
+                  </Button>
+                </div>
               </div>
             ))}
           </div>

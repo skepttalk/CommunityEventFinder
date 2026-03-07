@@ -35,11 +35,6 @@ export const joinEvent = async (id: string) => {
   return res.data.data;
 };
 
-export const approveParticipant = async (eventId: string, userId: string) => {
-  const res = await api.patch(`/events/${eventId}/approve/${userId}`);
-  return res.data.data;
-};
-
 export const getMyEvents = async () => {
   const res = await api.get("/events/my-events");
   return res.data.data;
@@ -54,5 +49,15 @@ export const getCalendarEvents = async (month: number, year: number) => {
   const res = await api.get("/events/calendar", {
     params: { month, year },
   });
+  return res.data.data;
+};
+
+export const approveParticipant = async (eventId: string, userId: string) => {
+  const res = await api.patch(`/events/${eventId}/approve/${userId}`);
+  return res.data.data;
+};
+
+export const rejectParticipant = async (eventId: string, userId: string) => {
+  const res = await api.patch(`/events/${eventId}/reject/${userId}`);
   return res.data.data;
 };

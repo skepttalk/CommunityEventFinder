@@ -7,6 +7,7 @@ import {
   getEventByIdService,
   getMyEventsService,
   approveParticipantService,
+  rejectParticipantService,
 } from "../services/event.service";
 import {
   createEventService,
@@ -91,6 +92,34 @@ export const approveParticipant = asyncHandler(
     );
 
     return successResponse(res, "Participant approved", event);
+  },
+);
+
+
+
+export const rejectParticipant = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new Unauthorized("Not authorized");
+    }
+
+      const eventId =
+      typeof req.params.eventId === "string" ? req.params.eventId : undefined;
+
+    const userId =
+      typeof req.params.userId === "string" ? req.params.userId : undefined;
+
+    if (!eventId || !userId) {
+      throw new BadRequest("Invalid request");
+    }
+
+    const event = await rejectParticipantService(
+      eventId,
+      req.user._id.toString(),
+      userId,
+    );
+
+    return successResponse(res, "Participant rejected", event);
   },
 );
 

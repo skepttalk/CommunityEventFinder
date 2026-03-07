@@ -11,6 +11,7 @@ import {
   getSingleEvent,
   getMyEvents,
   approveParticipant,
+  rejectParticipant,
 } from "../controllers/event.controller";
 
 import { validate } from "../middleware/validate.middleware";
@@ -28,6 +29,7 @@ router.get("/my-events", protect, getMyEvents);
 
 router.post("/:eventId/join", protect, joinEvent);
 router.patch("/:eventId/approve/:userId", protect, approveParticipant);
+router.patch("/:eventId/reject/:userId", protect, rejectParticipant);
 
 router.put("/:eventId", protect, updateEvent);
 router.patch("/:eventId/close", protect, closeEvent);

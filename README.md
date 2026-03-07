@@ -64,7 +64,7 @@ Community Event Finder allows users to:
 - Pagination support
 - Popular events using aggregation
 - Calendar API (month & year based filtering)
-- Geo-location support (latitude & longitude)
+- map  support ()
 
 ---
 

@@ -90,6 +90,44 @@ export const approveParticipantService = async (
   return event;
 };
 
+export const rejectParticipantService = async (
+  eventId: string,
+  organizerId: string,
+  userId: string,
+) => {
+  const event = await Event.findById(eventId).populate("pendingParticipants");
+
+  if (!event) {
+    throw new NotFound("Event not found");
+  }
+
+  if (!event.createdBy || event.createdBy.toString() !== organizerId) {
+    throw new Forbidden("Not allowed");
+  }
+
+  const index = event.pendingParticipants.findIndex(
+    (p: any) => p._id.toString() === userId,
+  );
+
+  if (index === -1) {
+    throw new BadRequest("Request not found");
+  }
+
+  const user: any = event.pendingParticipants[index];
+
+  event.pendingParticipants.splice(index, 1);
+
+  await event.save();
+
+  await sendEmail({
+    to: user.email,
+    subject: "Event Join Rejected",
+    text: `Your join request for ${event.title} was rejected.`,
+  });
+
+  return event;
+};
+
 export const updateEventService = async (
   eventId: string,
   userId: string,
@@ -275,8 +313,10 @@ export const getEventByIdService = async (eventId: string) => {
 
 export const getMyEventsService = async (userId: string) => {
   const events = await Event.find({
-    createdBy: userId,
-  }).sort({ createdAt: -1 });
+    $or: [{ createdBy: userId }, { participants: userId }],
+  })
+    .populate("createdBy", "name")
+    .sort({ date: 1 });
 
   return events;
 };

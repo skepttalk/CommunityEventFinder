@@ -13,6 +13,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import MyEvents from "../pages/Dashboard/MyEvents";
 
 import CalendarView from "../pages/Calendar/CalendarView";
+import Profile from "../pages/Profile/Profile";
 
 import ProtectedRoute from "../components/layout/ProtectedRoute";
 import MainLayout from "../components/layout/MainLayout";
@@ -87,6 +88,15 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <EditEvent />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/profile",
+        element: (
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         ),
       },

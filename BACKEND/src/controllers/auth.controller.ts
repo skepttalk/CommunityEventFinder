@@ -6,6 +6,7 @@ import {
   loginUser,
   verifyEmailService,
 } from "../services/auth.service";
+import { Unauthorized } from "../ERRORHANDLER/httpError";
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password, role } = req.body;
@@ -29,4 +30,12 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   const data = await loginUser(email, password);
 
   return successResponse(res, "Login successful", data);
+});
+
+export const getMe = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.user) {
+    throw new Unauthorized("Not authorized");
+  }
+
+  return successResponse(res, "User fetched successfully", req.user);
 });
