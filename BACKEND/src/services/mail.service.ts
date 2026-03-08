@@ -12,7 +12,7 @@ export const sendEmail = async ({
 }) => {
   try {
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
+      host: "smtp-relay.brevo.com",
       port: 587,
       secure: false,
       auth: {
@@ -21,14 +21,14 @@ export const sendEmail = async ({
       },
     });
 
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: `"Community Event Finder" <${env.EMAIL_USER}>`,
       to,
       subject,
       text,
     });
 
-    console.log("Email sent successfully");
+    console.log("Email sent successfully:", info.messageId);
   } catch (error) {
     console.error("Email sending error:", error);
   }
