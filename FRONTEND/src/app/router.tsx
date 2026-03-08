@@ -17,6 +17,7 @@ import Profile from "../pages/Profile/Profile";
 
 import ProtectedRoute from "../components/layout/ProtectedRoute";
 import MainLayout from "../components/layout/MainLayout";
+import MyActivity from "@/pages/Activity/MyActivity";
 
 export const router = createBrowserRouter([
   {
@@ -97,6 +98,15 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/my-activity",
+        element: (
+          <ProtectedRoute>
+            <MyActivity />
           </ProtectedRoute>
         ),
       },
