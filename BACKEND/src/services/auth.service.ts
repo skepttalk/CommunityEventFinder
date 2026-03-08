@@ -22,6 +22,7 @@ export const registerUser = async (
   email = email.toLowerCase();
 
   const userExists = await User.findOne({ email });
+
   if (userExists) {
     throw new BadRequest("Email already exists");
   }
@@ -32,7 +33,7 @@ export const registerUser = async (
     100000 + Math.random() * 900000,
   ).toString();
 
-  await User.create({
+  const user = await User.create({
     name,
     email,
     password: hashedPassword,
@@ -41,20 +42,31 @@ export const registerUser = async (
     verificationCodeExpire: new Date(Date.now() + 10 * 60 * 1000),
   });
 
-  await sendEmail({
+  sendEmail({
     to: email,
     subject: "Verify your email",
     text: `Your verification code is: ${verificationCode}`,
+  }).catch((err) => {
+    console.error("Email sending failed:", err);
   });
 
-  return { message: "Verification code sent to your email" };
+  return {
+    message: "Verification code sent to your email",
+    email,
+  };
 };
 
 export const verifyEmailService = async (email: string, code: string) => {
+  email = email.toLowerCase();
+
   const user = await User.findOne({ email });
 
   if (!user) {
     throw new BadRequest("Invalid email");
+  }
+
+  if (user.isVerified) {
+    throw new BadRequest("Email already verified");
   }
 
   if (user.verificationCode !== code) {
@@ -83,11 +95,13 @@ export const loginUser = async (email: string, password: string) => {
   email = email.toLowerCase();
 
   const user = await User.findOne({ email });
+
   if (!user) {
     throw new BadRequest("Invalid credentials");
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
+
   if (!isMatch) {
     throw new BadRequest("Invalid credentials");
   }

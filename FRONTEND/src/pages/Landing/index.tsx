@@ -1,10 +1,10 @@
-import Navbar from "../../components/layout/Navbar"
-import Footer from "../../components/layout/Footer"
+import Navbar from "../../components/layout/Navbar";
+import Footer from "../../components/layout/Footer";
 
-import HeroSection from "./HeroSection"
-import FeaturesSection from "./FeaturesSection"
-import StatsSection from "./StatsSection"
-import CTASection from "./CTASection"
+import HeroSection from "./HeroSection";
+import FeaturesSection from "./FeaturesSection";
+import StatsSection from "./StatsSection";
+import CTASection from "./CTASection";
 
 export default function Landing() {
   return (
@@ -20,5 +20,5 @@ export default function Landing() {
 
       <Footer />
     </>
-  )
+  );
 }

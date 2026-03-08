@@ -1,20 +1,63 @@
-import axios from "axios"
+import api from "./api";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api"
-
-export const getEvents = async (params: any) => {
-  const response = await axios.get(`${API}/events`, { params })
-  return response.data.data
-}
-
-export const getPopularEvents = async (limit: number = 10) => {
-  const response = await axios.get(`${API}/events/popular`, { params: { limit } })
-  return response.data.data
-}
-
-
+export const getEvents = async (params?: any) => {
+  const res = await api.get("/events", { params });
+  return res.data.data;
+};
 
 export const getEventById = async (id: string) => {
-  const response = await axios.get(`${API}/events/${id}`)
-  return response.data.data
-}
+  const res = await api.get(`/events/${id}`);
+  return res.data.data;
+};
+
+export const createEvent = async (data: any) => {
+  const res = await api.post("/events", data);
+  return res.data.data;
+};
+
+export const updateEvent = async ({ id, data }: { id: string; data: any }) => {
+  const res = await api.put(`/events/${id}`, data);
+  return res.data.data;
+};
+
+export const closeEvent = async (id: string) => {
+  const res = await api.patch(`/events/${id}/close`);
+  return res.data.data;
+};
+
+export const deleteEvent = async (id: string) => {
+  const res = await api.delete(`/events/${id}`);
+  return res.data.data;
+};
+
+export const joinEvent = async (id: string) => {
+  const res = await api.post(`/events/${id}/join`);
+  return res.data.data;
+};
+
+export const getMyEvents = async () => {
+  const res = await api.get("/events/my-events");
+  return res.data.data;
+};
+
+export const getPopularEvents = async () => {
+  const res = await api.get("/events/popular");
+  return res.data.data;
+};
+
+export const getCalendarEvents = async (month: number, year: number) => {
+  const res = await api.get("/events/calendar", {
+    params: { month, year },
+  });
+  return res.data.data;
+};
+
+export const approveParticipant = async (eventId: string, userId: string) => {
+  const res = await api.patch(`/events/${eventId}/approve/${userId}`);
+  return res.data.data;
+};
+
+export const rejectParticipant = async (eventId: string, userId: string) => {
+  const res = await api.patch(`/events/${eventId}/reject/${userId}`);
+  return res.data.data;
+};
