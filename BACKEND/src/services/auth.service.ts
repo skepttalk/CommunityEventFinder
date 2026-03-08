@@ -114,3 +114,35 @@ export const loginUser = async (email: string, password: string) => {
 
   return { token, user };
 };
+
+
+export const resendVerificationCode = async (email: string) => {
+  email = email.toLowerCase();
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new BadRequest("User not found");
+  }
+
+  if (user.isVerified) {
+    throw new BadRequest("Email already verified");
+  }
+
+  const verificationCode = Math.floor(
+    100000 + Math.random() * 900000
+  ).toString();
+
+  user.verificationCode = verificationCode;
+  user.verificationCodeExpire = new Date(Date.now() + 10 * 60 * 1000);
+
+  await user.save();
+
+  await sendEmail({
+    to: email,
+    subject: "Resend OTP - Verify your email",
+    text: `Your new verification code is: ${verificationCode}`,
+  });
+
+  return { message: "New verification code sent" };
+};

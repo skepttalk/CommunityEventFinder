@@ -5,6 +5,7 @@ import {
   registerUser,
   loginUser,
   verifyEmailService,
+  resendVerificationCode,
 } from "../services/auth.service";
 import { Unauthorized } from "../ERRORHANDLER/httpError";
 
@@ -38,4 +39,14 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
   }
 
   return successResponse(res, "User fetched successfully", req.user);
+});
+
+
+
+export const resendOTP = asyncHandler(async (req: Request, res: Response) => {
+  const { email } = req.body;
+
+  const data = await resendVerificationCode(email);
+
+  return successResponse(res, "OTP resent successfully", data);
 });
