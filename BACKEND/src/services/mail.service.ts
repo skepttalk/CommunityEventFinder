@@ -13,8 +13,8 @@ export const sendEmail = async ({
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp-relay.brevo.com",
-      port: 465,
-      secure: true,
+      port: 2525,
+      secure: false,
       auth: {
         user: env.EMAIL_USER,
         pass: env.EMAIL_PASS,
