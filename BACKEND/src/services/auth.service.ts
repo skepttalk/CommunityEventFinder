@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
-import { BadRequest } from "../ERRORHANDLER/httpError";
+import { BadRequest } from "../errorHandler/httpError";
 import { env } from "../config/env";
 import { sendEmail } from "./mail.service";
 

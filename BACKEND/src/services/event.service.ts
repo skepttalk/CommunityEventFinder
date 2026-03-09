@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Event from "../models/event.model";
 import User from "../models/user.model";
 import { sendEmail } from "./mail.service";
-import { NotFound, BadRequest, Forbidden } from "../ERRORHANDLER/httpError";
+import { NotFound, BadRequest, Forbidden } from "../errorHandler/httpError";
 
 export const createEventService = async (data: any, userId: string) => {
   const eventDate = new Date(data.date);

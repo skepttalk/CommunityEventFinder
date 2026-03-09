@@ -7,7 +7,7 @@ import {
   verifyEmailService,
   resendVerificationCode,
 } from "../services/auth.service";
-import { Unauthorized } from "../ERRORHANDLER/httpError";
+import { Unauthorized } from "../errorHandler/httpError";
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password, role } = req.body;

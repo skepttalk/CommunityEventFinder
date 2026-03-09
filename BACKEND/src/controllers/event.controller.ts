@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { successResponse } from "../utils/response";
-import { Unauthorized, BadRequest } from "../ERRORHANDLER/httpError";
+import { Unauthorized, BadRequest } from "../errorHandler/httpError";
 import {
   getCalendarEventsService,
   getEventByIdService,
