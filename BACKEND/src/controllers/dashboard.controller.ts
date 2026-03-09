@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { successResponse } from "../utils/response";
 import { getDashboardStats } from "../services/dashboard.service";
-import { Unauthorized } from "../ERRORHANDLER/httpError";
+import { Unauthorized } from "../errorHandler/httpError";
 
 export const getDashboard = asyncHandler(
   async (req: Request, res: Response) => {

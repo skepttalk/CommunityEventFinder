@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
-import { Unauthorized } from "../ERRORHANDLER/httpError";
+import { Unauthorized } from "../errorHandler/httpError";
 import { env } from "../config/env";
 
 export const protect = async (
