@@ -77,7 +77,7 @@ export const approveParticipantService = async (
 
   await event.save();
 
-  const user = await User.findById(userId);
+  const user = await User.findById(userId).lean();
 
   if (user) {
     await sendEmail({
@@ -296,7 +296,8 @@ export const getCalendarEventsService = async (month: number, year: number) => {
     date: { $gte: start, $lte: end },
   })
     .select("title date location status")
-    .sort({ date: 1 });
+    .sort({ date: 1 })
+    .lean();
 
   return events;
 };
@@ -305,7 +306,8 @@ export const getEventByIdService = async (eventId: string) => {
   const event = await Event.findById(eventId)
     .populate("createdBy", "name email role")
     .populate("participants", "name email")
-    .populate("pendingParticipants", "name email");
+    .populate("pendingParticipants", "name email")
+    .lean();
 
   if (!event) {
     throw new NotFound("Event not found");
@@ -319,7 +321,8 @@ export const getMyEventsService = async (userId: string) => {
     $or: [{ createdBy: userId }, { participants: userId }],
   })
     .populate("createdBy", "name")
-    .sort({ date: 1 });
+    .sort({ date: 1 })
+    .lean();
 
   return events;
 };

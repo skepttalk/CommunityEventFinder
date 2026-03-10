@@ -21,7 +21,7 @@ export const registerUser = async (
 ) => {
   email = email.toLowerCase();
 
-  const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({ email }).lean();
 
   if (userExists) {
     throw new BadRequest("Email already exists");
@@ -94,7 +94,7 @@ export const verifyEmailService = async (email: string, code: string) => {
 export const loginUser = async (email: string, password: string) => {
   email = email.toLowerCase();
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).lean();
 
   if (!user) {
     throw new BadRequest("Invalid credentials");

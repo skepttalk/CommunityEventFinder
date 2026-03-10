@@ -24,12 +24,25 @@ export default function RegisterForm({ setEmail, setShowOTP }: any) {
       setShowOTP(true);
     },
     onError: (err: any) => {
-      alert(err?.response?.data?.message || "Registration failed");
+      alert(
+        err?.response?.data?.message ||
+          "Unable to create account. Please try again.",
+      );
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!name || !email || !password) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters");
+      return;
+    }
 
     mutation.mutate({
       name,
@@ -79,6 +92,7 @@ export default function RegisterForm({ setEmail, setShowOTP }: any) {
                   size={18}
                 />
                 <Input
+                type="email"
                   className="pl-10 h-11 rounded-xl bg-gray-50"
                   value={email}
                   onChange={(e) => setLocalEmail(e.target.value)}
