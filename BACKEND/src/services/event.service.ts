@@ -210,11 +210,14 @@ export const getEventsService = async ({
   const filter: any = {};
 
   if (city) {
-    filter["location.city"] = city;
+    filter["location.city"] = { $regex: city, $options: "i" };
   }
 
   if (search) {
-    filter.$text = { $search: search };
+    filter.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } },
+    ];
   }
 
   const today = new Date();

@@ -318,13 +318,13 @@ Kuldeep Singh
 Software Developer Intern at HelperSetu
 
 GitHub\
-https://github.com/skepttalk
+https://github.com/kuldeep-singh-pro
 
 ------------------------------------------------------------------------
 
 ## Repository
 
-https://github.com/skepttalk/CommunityEventFinder
+https://github.com/kuldeep-singh-pro/CommunityEventFinder
 
 ------------------------------------------------------------------------
 

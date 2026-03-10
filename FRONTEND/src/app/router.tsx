@@ -18,6 +18,8 @@ import Profile from "../pages/Profile/Profile";
 import ProtectedRoute from "../components/layout/ProtectedRoute";
 import MainLayout from "../components/layout/MainLayout";
 import MyActivity from "@/pages/Activity/MyActivity";
+import ForgotPassword from "@/pages/Auth/ForgotPassword";
+import ResetPassword from "@/pages/Auth/ResetPassword";
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +48,16 @@ export const router = createBrowserRouter([
       {
         path: "/events/:id",
         element: <EventDetails />,
+      },
+
+      {
+        path: "/forgot-password",
+        element: <ForgotPassword />,
+      },
+
+      {
+        path: "/reset-password",
+        element: <ResetPassword />,
       },
 
       {

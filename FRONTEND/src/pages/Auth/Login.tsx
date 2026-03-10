@@ -35,7 +35,7 @@ export default function Login() {
     },
 
     onError: (err: any) => {
-      alert(err?.response?.data?.message || "Login failed");
+      alert(err?.response?.data?.message || "Invalid email or password");
     },
   });
 
@@ -105,8 +105,11 @@ export default function Login() {
                   <div className="flex justify-between text-sm mb-1">
                     <Label>Password</Label>
 
-                    <Link to="#" className="text-indigo-600">
-                      Forgot password?
+                    <Link
+                      to="/forgot-password"
+                      className="text-indigo-600 hover:underline text-sm"
+                    >
+                      Forgot Password?
                     </Link>
                   </div>
 

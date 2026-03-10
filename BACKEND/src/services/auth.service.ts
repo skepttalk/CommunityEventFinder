@@ -115,7 +115,6 @@ export const loginUser = async (email: string, password: string) => {
   return { token, user };
 };
 
-
 export const resendVerificationCode = async (email: string) => {
   email = email.toLowerCase();
 
@@ -130,7 +129,7 @@ export const resendVerificationCode = async (email: string) => {
   }
 
   const verificationCode = Math.floor(
-    100000 + Math.random() * 900000
+    100000 + Math.random() * 900000,
   ).toString();
 
   user.verificationCode = verificationCode;
@@ -145,4 +144,61 @@ export const resendVerificationCode = async (email: string) => {
   });
 
   return { message: "New verification code sent" };
+};
+
+export const forgotPasswordService = async (email: string) => {
+  email = email.toLowerCase();
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new BadRequest("User not found");
+  }
+
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+  user.resetPasswordCode = code;
+  user.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000);
+
+  await user.save();
+
+  await sendEmail({
+    to: email,
+    subject: "Reset your password",
+    text: `Your password reset code is: ${code}`,
+  });
+
+  return { message: "Password reset code sent" };
+};
+
+export const resetPasswordService = async (
+  email: string,
+  code: string,
+  newPassword: string,
+) => {
+  email = email.toLowerCase();
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new BadRequest("User not found");
+  }
+
+  if (user.resetPasswordCode !== code) {
+    throw new BadRequest("Invalid reset code");
+  }
+
+  if (!user.resetPasswordExpire || user.resetPasswordExpire < new Date()) {
+    throw new BadRequest("Reset code expired");
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  user.password = hashedPassword;
+  user.resetPasswordCode = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  return { message: "Password reset successfully" };
 };

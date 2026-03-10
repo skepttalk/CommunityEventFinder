@@ -6,6 +6,8 @@ import {
   loginUser,
   verifyEmailService,
   resendVerificationCode,
+  forgotPasswordService,
+  resetPasswordService,
 } from "../services/auth.service";
 import { Unauthorized } from "../errorHandler/httpError";
 
@@ -41,8 +43,6 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
   return successResponse(res, "User fetched successfully", req.user);
 });
 
-
-
 export const resendOTP = asyncHandler(async (req: Request, res: Response) => {
   const { email } = req.body;
 
@@ -50,3 +50,23 @@ export const resendOTP = asyncHandler(async (req: Request, res: Response) => {
 
   return successResponse(res, "OTP resent successfully", data);
 });
+
+export const forgotPassword = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { email } = req.body;
+
+    const data = await forgotPasswordService(email);
+
+    return successResponse(res, "Reset code sent to email", data);
+  },
+);
+
+export const resetPassword = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { email, code, password } = req.body;
+
+    const data = await resetPasswordService(email, code, password);
+
+    return successResponse(res, "Password reset successful", data);
+  },
+);

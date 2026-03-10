@@ -31,3 +31,18 @@ export const getCurrentUser = async () => {
   const res = await api.get("/auth/me");
   return res.data.data;
 };
+
+
+export const forgotPassword = async (email: string) => {
+  const response = await api.post("/auth/forgot-password", { email });
+  return response.data;
+};
+
+export const resetPassword = async (data: {
+  email: string;
+  code: string;
+  password: string;
+}) => {
+  const response = await api.post("/auth/reset-password", data);
+  return response.data;
+};
