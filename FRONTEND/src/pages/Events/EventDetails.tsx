@@ -29,7 +29,7 @@ export default function EventDetails() {
       refetch();
     },
     onError: (err: any) => {
-      alert(err?.response?.data?.message || "Unable to join event");
+      alert(err?.response?.data?.message || "Login required to send a join request.");
     },
   });
 
@@ -64,7 +64,7 @@ export default function EventDetails() {
           : "Join Event";
 
   const disabled =
-    isParticipant || isPending || isClosed || isOrganizer || isFull;
+    isParticipant || isPending || isClosed || isFull;
 
   return (
     <motion.div

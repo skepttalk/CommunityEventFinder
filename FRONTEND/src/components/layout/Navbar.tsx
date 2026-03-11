@@ -52,7 +52,11 @@ export default function Navbar() {
               >
                 Calendar
               </Link>
+            </>
+          )}
 
+          {user?.role === "participant" && (
+            <>
               <Link
                 to="/my-activity"
                 className="text-muted-foreground hover:text-indigo-600 transition"
@@ -139,7 +143,11 @@ export default function Navbar() {
               <Link to="/calendar" onClick={() => setOpen(false)}>
                 Calendar
               </Link>
+            </>
+          )}
 
+          {user?.role === "participant" && (
+            <>
               <Link to="/my-activity" onClick={() => setOpen(false)}>
                 My Activity
               </Link>

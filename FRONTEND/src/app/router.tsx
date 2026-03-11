@@ -9,6 +9,7 @@ import EventDetails from "../pages/Events/EventDetails";
 import CreateEvent from "../pages/Events/CreateEvent";
 import EditEvent from "../pages/Events/EditEvent";
 
+
 import Dashboard from "../pages/Dashboard/Dashboard";
 import MyEvents from "../pages/Dashboard/MyEvents";
 
@@ -20,6 +21,7 @@ import MainLayout from "../components/layout/MainLayout";
 import MyActivity from "@/pages/Activity/MyActivity";
 import ForgotPassword from "@/pages/Auth/ForgotPassword";
 import ResetPassword from "@/pages/Auth/ResetPassword";
+import MangeEvent from "@/pages/Events/manageEvent";
 
 export const router = createBrowserRouter([
   {
@@ -101,6 +103,15 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <EditEvent />
+          </ProtectedRoute>
+        ),
+      },
+
+         {
+        path: "/manageEvent-event/:id",
+        element: (
+          <ProtectedRoute>
+            <MangeEvent/>
           </ProtectedRoute>
         ),
       },
