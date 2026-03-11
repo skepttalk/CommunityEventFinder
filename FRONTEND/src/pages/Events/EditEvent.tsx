@@ -2,18 +2,22 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Trash2, CalendarDays, MapPin, Users } from "lucide-react";
+import { Trash2 } from "lucide-react";
+
 import api from "@/services/api";
 import {
   closeEvent,
   deleteEvent,
   getEventById,
 } from "@/services/event.service";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+
+import EventDetailsView from "@/components/event/EventDetailsView";
 
 export default function EditEvent() {
   const { id } = useParams();
@@ -80,7 +84,13 @@ export default function EditEvent() {
       description,
       date: dateTime.toISOString(),
       maxParticipants: Number(maxParticipants),
-      location: { city, state, street, address, pincode: Number(pincode) },
+      location: {
+        city,
+        state,
+        street,
+        address,
+        pincode: Number(pincode),
+      },
     });
   };
 
@@ -94,15 +104,25 @@ export default function EditEvent() {
     }
   };
 
-  const participants = event?.participants?.length || 0;
-  const max = Number(maxParticipants) || 50;
-  const percent = Math.min((participants / max) * 100, 100);
+  const previewEvent = {
+    ...event,
+    title,
+    description,
+    date: `${date}T${time}`,
+    maxParticipants: Number(maxParticipants),
+    location: {
+      city,
+      state,
+      street,
+      address,
+      pincode,
+    },
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
       className="max-w-7xl mx-auto py-10 grid lg:grid-cols-2 gap-8"
     >
       <Card className="relative shadow-lg">
@@ -235,49 +255,16 @@ export default function EditEvent() {
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg">
-        <CardContent className="p-6 space-y-4">
-          <h2 className="text-xl font-bold">{title || "Event Title"}</h2>
-
-          <p className="text-muted-foreground">
-            {description || "Event description will appear here"}
-          </p>
-
-          <div className="flex items-center gap-2 text-sm">
-            <CalendarDays size={16} />
-            {date
-              ? new Date(`${date}T${time}`).toLocaleDateString()
-              : "Event Date"}
-          </div>
-
-          <div className="flex items-center gap-2 text-sm">
-            <MapPin size={16} />
-            {city || "City"}
-          </div>
-
-          <div className="flex items-center gap-2 text-sm">
-            <Users size={16} />
-            {participants}/{max} attending
-          </div>
-
-          <div className="w-full bg-muted h-2 rounded-md overflow-hidden">
-            <div
-              className="bg-primary h-full"
-              style={{ width: `${percent}%` }}
-            />
-          </div>
-
-          <iframe
-            title="map"
-            className="w-full h-60 rounded-md"
-            src={`https://maps.google.com/maps?q=${street},${city},${state}&z=15&output=embed`}
-          />
-
-          <p className="text-sm text-muted-foreground">
-            {street}, {city},{state}
-          </p>
-        </CardContent>
-      </Card>
+      <div className="w-full">
+        <EventDetailsView
+          event={previewEvent}
+          joinButton={
+            <Button disabled className="w-full">
+              Preview
+            </Button>
+          }
+        />
+      </div>
     </motion.div>
   );
 }
